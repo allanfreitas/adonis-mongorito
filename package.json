@@ -1,0 +1,37 @@
+{
+  "name": "adonis-mongorito",
+  "version": "0.0.1",
+  "description": "A package to use AdonisJS with MongoDB(using mongorito package)",
+  "main": "index.js",
+  "scripts": {
+    "lint": "standard src/**/*.js src/**/**/*.js src/**/**/**/*.js lib/*.js test/**/*.js providers/*.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/allanfreitas/adonis-mongorito.git"
+  },
+  "devDependencies": {
+    "semantic-release": "^4.3.5",
+    "standard": "^8.0.0"
+  },
+  "dependencies": {
+    "adonis-fold": "^3.0.2",
+    "mongorito": "^2.1.2"
+  },
+  "config": {
+    "flags": "--harmony_proxies"
+  },
+  "keywords": [
+    "adonisjs",
+    "adonis",
+    "mongodb",
+    "mongorito"
+  ],
+  "author": "Allan Freitas <allanfreitasci@gmail.com> (https://tech.allanfreitas.com.br)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/allanfreitas/adonis-mongorito/issues"
+  },
+  "homepage": "https://github.com/allanfreitas/adonis-mongorito#readme"
+}
