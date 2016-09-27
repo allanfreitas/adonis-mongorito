@@ -1,36 +1,45 @@
 'use strict'
 
 const ServiceProvider = require('adonis-fold').ServiceProvider
-
 const Mongorito = require('mongorito')
+const CatLog = require('cat-log')
+const logger = new CatLog('adonis:mongorito')
+
+class MongoritoModel extends Mongorito.Model {
+
+  /**
+   * Required to instructor IoC container to never make an
+   * instance of this class even when `make` is called.
+   * Model instances should be controlled by user.
+   *
+   * @return {Boolean}
+   */
+  static get makePlain () {
+    return true
+  }
+
+}
 
 class MongoritoProvider extends ServiceProvider {
 
   * register () {
     this.app.singleton('Adonis/Addons/MongoritoModel', function (app) {
+      const Config = app.use('Adonis/Src/Config')
+      const mongoHost = Config.get('mongo.host')
+      const mongoPort = Config.get('mongo.port')
+      const mongoDb = Config.get('mongo.db')
+      const mongoUser = Config.get('mongo.user', '')
+      const mongoPass = Config.get('mongo.pass', '')
 
-      const config = app.use('Adonis/Src/Config')
-      const mongo_host = config.get('mongo.host')
-      const mongo_port = config.get('mongo.port')
-      const mongo_db   = config.get('mongo.db')
-      const mongo_user = config.get('mongo.user', '')
-      const mongo_pass = config.get('mongo.pass', '')
+      const connectUri = `${mongoHost}:${mongoPort}/${mongoDb}`
+      const connectionString = (mongoUser !== '' || mongoPass !== '') ? `${mongoUser}:${mongoPass}@${connectUri}` : connectUri
 
-      const connect_uri = mongo_host+':'+mongo_port+'/'+mongo_db;
-      const hasAuthDetails = (mongo_user != '' || mongo_pass != '')
-      console.log('hasAuthDetails:',hasAuthDetails)
-      if (hasAuthDetails)
-      {
-        console.log(mongo_user+':'+mongo_pass+'@'+connect_uri)
-        Mongorito.connect(mongo_user+':'+mongo_pass+'@'+connect_uri)
-      }else{
-        Mongorito.connect(connect_uri)
-      }
+      logger.verbose('connection string %s', connectionString)
+      Mongorito.connect(connectionString)
 
-      return Mongorito.Model
+      return MongoritoModel
     })
   }
-
 }
 
 module.exports = MongoritoProvider
