@@ -1,6 +1,6 @@
 {
   "name": "adonis-mongorito",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A package to use AdonisJS with MongoDB(using mongorito package)",
   "main": "index.js",
   "scripts": {
