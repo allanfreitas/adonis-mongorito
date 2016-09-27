@@ -12,11 +12,12 @@
     "url": "git+https://github.com/allanfreitas/adonis-mongorito.git"
   },
   "devDependencies": {
+    "adonis-fold": "^3.0.3",
     "semantic-release": "^4.3.5",
     "standard": "^8.0.0"
   },
   "dependencies": {
-    "adonis-fold": "^3.0.2",
+    "cat-log": "^1.0.2",
     "mongorito": "^2.1.2"
   },
   "config": {
