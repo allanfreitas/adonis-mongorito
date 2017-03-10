@@ -5,6 +5,7 @@ const Mongorito = require('mongorito')
 const CatLog = require('cat-log')
 const logger = new CatLog('adonis:mongorito')
 const MongoritoScheme = require('../AuthManager/MongoritoScheme')
+const MongoritoSerializer = require('../Serializer/MongoritoSerializer')
 
 class MongoritoModel extends Mongorito.Model {
 
@@ -40,6 +41,8 @@ class MongoritoProvider extends ServiceProvider {
 
       // Add Mongo auth support
       managers['Adonis/Src/AuthManager'].extend('MongoritoScheme', MongoritoScheme, 'scheme')
+      // Add Mongo serializer
+      managers['Adonis/Src/AuthManager'].extend('MongoritoSerializer', MongoritoSerializer, 'serializer')
 
       logger.verbose('connection string %s', connectionString)
       Mongorito.connect(connectionString)
