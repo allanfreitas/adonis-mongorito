@@ -26,9 +26,15 @@ class MongoritoProvider extends ServiceProvider {
 
   * register () {
 
+    const managers = this.app.getManagers();
+
+    // Add Mongo auth support
+    managers['Adonis/Src/AuthManager'].extend('MongoritoScheme', MongoritoScheme, 'scheme')
+    // Add Mongo serializer
+    managers['Adonis/Src/AuthManager'].extend('MongoritoSerializer', MongoritoSerializer, 'serializer')
 
     this.app.singleton('Adonis/Addons/MongoritoModel', function (app) {
-      const managers = this.app.getManagers();
+
       const Config = app.use('Adonis/Src/Config')
       const mongoHost = Config.get('mongo.host')
       const mongoPort = Config.get('mongo.port')
@@ -38,11 +44,6 @@ class MongoritoProvider extends ServiceProvider {
 
       const connectUri = `${mongoHost}:${mongoPort}/${mongoDb}`
       const connectionString = (mongoUser !== '' || mongoPass !== '') ? `${mongoUser}:${mongoPass}@${connectUri}` : connectUri
-
-      // Add Mongo auth support
-      managers['Adonis/Src/AuthManager'].extend('MongoritoScheme', MongoritoScheme, 'scheme')
-      // Add Mongo serializer
-      managers['Adonis/Src/AuthManager'].extend('MongoritoSerializer', MongoritoSerializer, 'serializer')
 
       logger.verbose('connection string %s', connectionString)
       Mongorito.connect(connectionString)
