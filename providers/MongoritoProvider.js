@@ -4,6 +4,7 @@ const ServiceProvider = require('adonis-fold').ServiceProvider
 const Mongorito = require('mongorito')
 const CatLog = require('cat-log')
 const logger = new CatLog('adonis:mongorito')
+const MongoritoScheme = require('../Scheme/MongoritoScheme')
 
 class MongoritoModel extends Mongorito.Model {
 
@@ -23,7 +24,10 @@ class MongoritoModel extends Mongorito.Model {
 class MongoritoProvider extends ServiceProvider {
 
   * register () {
+
+
     this.app.singleton('Adonis/Addons/MongoritoModel', function (app) {
+      const managers = this.app.getManagers();
       const Config = app.use('Adonis/Src/Config')
       const mongoHost = Config.get('mongo.host')
       const mongoPort = Config.get('mongo.port')
@@ -34,8 +38,12 @@ class MongoritoProvider extends ServiceProvider {
       const connectUri = `${mongoHost}:${mongoPort}/${mongoDb}`
       const connectionString = (mongoUser !== '' || mongoPass !== '') ? `${mongoUser}:${mongoPass}@${connectUri}` : connectUri
 
+      // Add Mongo auth support
+      managers['Adonis/Src/AuthManager'].extend('MongoritoScheme', MongoritoScheme, 'scheme')
+
       logger.verbose('connection string %s', connectionString)
       Mongorito.connect(connectionString)
+
 
       return MongoritoModel
     })
