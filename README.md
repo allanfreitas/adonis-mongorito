@@ -39,6 +39,20 @@ const providers = [
 ]
 ```
 
+The following its to add the Authenticator combination so you can perform Mongo db check in authentication.
+
+```
+  // change here if you are using jwt, otherwise change it in you right authenticator
+  jwt: {
+    serializer: 'MongoritoSerializer', // this is new
+    model: 'App/Model/User',
+    scheme: 'MongoritoScheme', // and this too
+    uid: 'username',
+    password: 'password',
+    secret: Config.get('app.appKey')
+  }
+```
+
 Add the entry `MongoritoModel: 'Adonis/Addons/MongoritoModel'` on the `aliases` object on `bootstrap/app.js` file like this:
 
 ```js
@@ -48,6 +62,7 @@ const aliases = {
    //..OTHER DEFAULT PROVIDERS...//
   View: 'Adonis/Src/View',
   MongoritoModel: 'Adonis/Addons/MongoritoModel' //this line
+  MongoritoScheme: 'adonis-mongorito/AuthManager/MongoritoScheme' // and this line
 }
 ```
 

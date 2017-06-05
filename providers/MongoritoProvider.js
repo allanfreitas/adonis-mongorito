@@ -1,9 +1,12 @@
 'use strict'
 
+const Ioc = require('adonis-fold').Ioc
 const ServiceProvider = require('adonis-fold').ServiceProvider
 const Mongorito = require('mongorito')
 const CatLog = require('cat-log')
 const logger = new CatLog('adonis:mongorito')
+const MongoritoScheme = require('../AuthManager/MongoritoScheme')
+const MongoritoSerializer = require('../Serializer/MongoritoSerializer')
 
 class MongoritoModel extends Mongorito.Model {
 
@@ -23,7 +26,18 @@ class MongoritoModel extends Mongorito.Model {
 class MongoritoProvider extends ServiceProvider {
 
   * register () {
+
+    const managers = this.app.getManagers();
+
+    // Add Mongo auth support
+    managers['Adonis/Src/AuthManager'].extend('MongoritoScheme', MongoritoScheme, 'scheme')
+    // Add Mongo serializer
+    Ioc.extend('Adonis/Src/AuthManager', 'MongoritoSerializer', function (app) {
+      return new MongoritoSerializer()
+    }, 'serializer')
+
     this.app.singleton('Adonis/Addons/MongoritoModel', function (app) {
+
       const Config = app.use('Adonis/Src/Config')
       const mongoHost = Config.get('mongo.host')
       const mongoPort = Config.get('mongo.port')
@@ -36,6 +50,7 @@ class MongoritoProvider extends ServiceProvider {
 
       logger.verbose('connection string %s', connectionString)
       Mongorito.connect(connectionString)
+
 
       return MongoritoModel
     })
